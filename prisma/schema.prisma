@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  fullName String @unique 
+  email String @unique
+  fone String 
+  password String @db.VarChar(150)
+  createdAt DateTime @default(now())
+  contacts Contact[]
+  meansOfContacts MeanOfContact[]
+}
+
+model Contact {
+  id String @id @default(uuid())
+  fullName String @unique 
+  email String 
+  fone String
+  createdAt DateTime @default(now())
+  meansOfContacts MeanOfContact[]
+  user User @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model MeanOfContact {
+  id String @id @default(uuid())
+  email String 
+  fone String
+  contact Contact? @relation(fields: [contactId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
+  contactId String?
+  userId String?
+}
