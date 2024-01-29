@@ -6,7 +6,7 @@ import {
   TUserResult,
   TUserUpdate,
 } from "../interfaces/user.interfaces";
-import { response } from "express";
+import AppError from "../Errors/AppErrors.erros";
 
 export const createNewUserService = async (data: TUserCreate): Promise<TUserResult> => {
   data.password = await hash(data.password, 10);
@@ -21,7 +21,14 @@ export const createNewUserService = async (data: TUserCreate): Promise<TUserResu
 
 export const readAllUsersService = async (): Promise<TUserReadAllResult> => {
   const users = await newPrismaClient.user.findMany({
-    select: { id: true, fullName: true, email: true, fone: true, createdAt: true },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      fone: true,
+      createdAt: true,
+      _count: true,
+    },
   });
 
   return users;
@@ -43,6 +50,10 @@ export const readUserByIdService = async (
       meansOfContacts: true,
     },
   });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
 
   return user;
 };

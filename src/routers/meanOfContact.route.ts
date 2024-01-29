@@ -13,24 +13,24 @@ export const meanOfContactRoutes: Router = Router();
 
 meanOfContactRoutes.post("/", verifyToken, createNewMeanOfContactToUserController);
 meanOfContactRoutes.post(
-  "/:contactId/",
+  "/:contactId",
   verifyToken,
   createNewMeanOfContactToContactController
 );
 
 meanOfContactRoutes.get("/", verifyToken, readAllMeanOfContactController);
 meanOfContactRoutes.get(
-  "/:meanOfContactId/",
+  "/:meanOfContactId",
   verifyToken,
   readMeanOfContactByIdController
 );
 meanOfContactRoutes.patch(
-  "/:meanOfContactId/",
+  "/:meanOfContactId",
   verifyToken,
   updateMeanOfContactByIdController
 );
 meanOfContactRoutes.delete(
-  "/:meanOfContactId/",
+  "/:meanOfContactId",
   verifyToken,
   deleteMeanOfContactByIdController
 );

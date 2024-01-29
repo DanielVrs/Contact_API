@@ -1,3 +1,4 @@
+import AppError from "../Errors/AppErrors.erros";
 import {
   TContact,
   TContactCreate,
@@ -14,7 +15,17 @@ export const createContactService = async (data: TContactCreate): Promise<TConta
 };
 
 export const readAllContactService = async (): Promise<TContactReadAllResult> => {
-  const contacts = await newPrismaClient.contact.findMany();
+  const contacts = await newPrismaClient.contact.findMany({
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      fone: true,
+      createdAt: true,
+      userId: true,
+      _count: true,
+    },
+  });
 
   return contacts;
 };
@@ -36,6 +47,10 @@ export const readContactByIDService = async (
     },
   });
 
+  if (!contact) {
+    throw new AppError("Contact not found", 404);
+  }
+
   return contact;
 };
 
@@ -49,6 +64,10 @@ export const updateContactByIDService = async (
       ...data,
     },
   });
+
+  if (!contact) {
+    throw new AppError("Contact not found", 404);
+  }
 
   return contact;
 };

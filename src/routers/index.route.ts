@@ -6,7 +6,7 @@ import { meanOfContactRoutes } from "./meanOfContact.route";
 
 export const routes: Router = Router();
 
-routes.use("/user/", userRoutes);
-routes.use("/login/", loginRoute);
-routes.use("/contact/", contactRoutes);
-routes.use("/meanOfContact/", meanOfContactRoutes);
+routes.use("/user", userRoutes);
+routes.use("/login", loginRoute);
+routes.use("/contact", contactRoutes);
+routes.use("/meanOfContact", meanOfContactRoutes);

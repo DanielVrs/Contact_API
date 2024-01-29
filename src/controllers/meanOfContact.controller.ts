@@ -7,6 +7,8 @@ import {
   readMeanOfContactByIdService,
   updateMeanOfContactByIdService,
 } from "../services/meanOfContact.service";
+import newPrismaClient from "../prisma";
+import AppError from "../Errors/AppErrors.erros";
 
 export const createNewMeanOfContactToUserController = async (
   req: Request,
@@ -26,6 +28,12 @@ export const createNewMeanOfContactToContactController = async (
 ) => {
   const contactId = req.params.contactId;
   const data = req.body;
+
+  const contact = await newPrismaClient.contact.findUnique({ where: { id: contactId } });
+
+  if (!contact) {
+    throw new AppError("Contact not found", 404);
+  }
 
   const meanOfContact = await createNewMeanOfContactToContactService({
     ...data,
@@ -51,15 +59,14 @@ export const updateMeanOfContactByIdController = async (req: Request, res: Respo
   const meanOfContactId = req.params.meanOfContactId;
   const data = req.body;
 
-  console.log(data);
-  console.log(meanOfContactId);
   const meanOfContact = await updateMeanOfContactByIdService(meanOfContactId, data);
 
   return res.status(200).json(meanOfContact);
 };
 
 export const deleteMeanOfContactByIdController = async (req: Request, res: Response) => {
-  const meanOfContactId = res.locals.decoded.sub;
+  const meanOfContactId = req.params.meanOfContactId;
+
   await deleteMeanOfContactByIdService(meanOfContactId);
 
   return res.status(204).json();

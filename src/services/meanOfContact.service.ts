@@ -1,3 +1,4 @@
+import AppError from "../Errors/AppErrors.erros";
 import {
   TMeanOfContact,
   TMeanOfContactCreate,
@@ -9,21 +10,21 @@ import newPrismaClient from "../prisma";
 export const createNewMeanOfContactToUserService = async (
   data: TMeanOfContactCreate
 ): Promise<TMeanOfContact> => {
-  const user: TMeanOfContact = await newPrismaClient.meanOfContact.create({
+  const meanOfContact: TMeanOfContact = await newPrismaClient.meanOfContact.create({
     data: { ...data },
   });
 
-  return user;
+  return meanOfContact;
 };
 
 export const createNewMeanOfContactToContactService = async (
   data: TMeanOfContactCreate
 ): Promise<TMeanOfContact> => {
-  const user: TMeanOfContact = await newPrismaClient.meanOfContact.create({
+  const meanOfContact: TMeanOfContact = await newPrismaClient.meanOfContact.create({
     data: { ...data },
   });
 
-  return user;
+  return meanOfContact;
 };
 
 export const readAllMeanOfContactService = async (): Promise<TMeanOfContactReadAll> => {
@@ -39,6 +40,10 @@ export const readMeanOfContactByIdService = async (
     where: { id: meanOfContactId },
   });
 
+  if (!meanOfContact) {
+    throw new AppError("mean of contact not found.", 404);
+  }
+
   return meanOfContact;
 };
 
@@ -46,16 +51,33 @@ export const updateMeanOfContactByIdService = async (
   meanOfContactId: string,
   data: TMeanOfContactUpdate
 ): Promise<TMeanOfContact> => {
-  const meanOfContact = await newPrismaClient.meanOfContact.update({
+  const meanOfContact = await newPrismaClient.meanOfContact.findUnique({
+    where: { id: meanOfContactId },
+  });
+
+  if (!meanOfContact) {
+    throw new AppError("mean of contact not found.", 404);
+  }
+
+  const meanOfContactUpdated = await newPrismaClient.meanOfContact.update({
     where: { id: meanOfContactId },
     data: {
       ...data,
     },
   });
 
-  return meanOfContact;
+  return meanOfContactUpdated;
 };
 
-export const deleteMeanOfContactByIdService = async (userId: string): Promise<void> => {
-  await newPrismaClient.user.delete({ where: { id: userId } });
+export const deleteMeanOfContactByIdService = async (
+  meanOfContactId: string
+): Promise<void> => {
+  const meanOfContact = await newPrismaClient.meanOfContact.findUnique({
+    where: { id: meanOfContactId },
+  });
+
+  if (!meanOfContact) {
+    throw new AppError("mean of contact not found.", 404);
+  }
+  await newPrismaClient.meanOfContact.delete({ where: { id: meanOfContactId } });
 };

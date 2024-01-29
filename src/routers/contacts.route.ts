@@ -12,6 +12,6 @@ export const contactRoutes: Router = Router();
 
 contactRoutes.post("/", verifyToken, createContactController);
 contactRoutes.get("/", verifyToken, readAllContactController);
-contactRoutes.get("/:contactId/", verifyToken, readContactByIDController);
-contactRoutes.patch("/:contactId/", verifyToken, updateContactByIDController);
-contactRoutes.delete("/:contactId/", verifyToken, deleteContactByIDController);
+contactRoutes.get("/:contactId", verifyToken, readContactByIDController);
+contactRoutes.patch("/:contactId", verifyToken, updateContactByIDController);
+contactRoutes.delete("/:contactId", verifyToken, deleteContactByIDController);

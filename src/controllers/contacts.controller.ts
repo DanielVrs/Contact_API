@@ -7,6 +7,8 @@ import {
   updateContactByIDService,
 } from "../services/contact.service";
 import { TContact } from "../interfaces/contacts.interfaces";
+import newPrismaClient from "../prisma";
+import AppError from "../Errors/AppErrors.erros";
 
 export const createContactController = async (
   req: Request,
@@ -40,6 +42,15 @@ export const updateContactByIDController = async (req: Request, res: Response) =
 
 export const deleteContactByIDController = async (req: Request, res: Response) => {
   const contactId = req.params.contactId;
+
+  const contact = await newPrismaClient.contact.findUnique({
+    where: { id: contactId },
+  });
+
+  if (!contact) {
+    throw new AppError("Contact not found", 404);
+  }
+
   await deleteContactByIDService(contactId);
 
   return res.status(204).json();
