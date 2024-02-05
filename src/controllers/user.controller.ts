@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   createNewUserService,
   deleteUserByIdService,
+  profileUserLoggedService,
   readAllUsersService,
   readUserByIdService,
   updateUserByIdService,
@@ -39,4 +40,10 @@ export const deleteUserByIdController = async (req: Request, res: Response) => {
   await deleteUserByIdService(userId);
 
   return res.status(204).json();
+};
+
+export const profileUserLoggedController = async (req: Request, res: Response) => {
+  const userId = res.locals.decoded.sub;
+  const user = await profileUserLoggedService(userId);
+  return res.status(200).json(user);
 };

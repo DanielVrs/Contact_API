@@ -76,3 +76,27 @@ export const updateUserByIdService = async (
 export const deleteUserByIdService = async (userId: string): Promise<void> => {
   await newPrismaClient.user.delete({ where: { id: userId } });
 };
+
+export const profileUserLoggedService = async (
+  userId: string
+): Promise<TUserResult | null> => {
+  const user = await newPrismaClient.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      fone: true,
+      createdAt: true,
+      contacts: true,
+      _count: true,
+      meansOfContacts: true,
+    },
+  });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  return user;
+};

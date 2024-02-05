@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createNewUserController,
   deleteUserByIdController,
+  profileUserLoggedController,
   readAllUsersController,
   readUserByIdController,
   updateUserByIdController,
@@ -15,6 +16,7 @@ export const userRoutes: Router = Router();
 
 userRoutes.post("/", verifyEmail, verifyUniqueName, createNewUserController);
 userRoutes.get("/", verifyToken, readAllUsersController);
+userRoutes.get("/profile", verifyToken, profileUserLoggedController);
 
 userRoutes.get("/:userId", verifyToken, readUserByIdController);
 userRoutes.patch("/", verifyToken, updateUserByIdController);
