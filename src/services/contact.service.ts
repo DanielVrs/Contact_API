@@ -54,24 +54,45 @@ export const readContactByIDService = async (
   return contact;
 };
 
+export const deleteContactByIDService = async (contactId: string): Promise<void> => {
+  await newPrismaClient.contact.delete({ where: { id: contactId } });
+};
+
 export const updateContactByIDService = async (
   contactId: string,
-  data: TContactUpdate
+  data: Record<string, any>
 ): Promise<TContact | null> => {
-  const contact = await newPrismaClient.contact.update({
+  const existingContact = await newPrismaClient.contact.findUnique({
     where: { id: contactId },
-    data: {
-      ...data,
-    },
   });
 
-  if (!contact) {
+  if (!existingContact) {
     throw new AppError("Contact not found", 404);
   }
 
-  return contact;
-};
+  const contactUpdate: Record<string, any> = {};
 
-export const deleteContactByIDService = async (contactId: string): Promise<void> => {
-  await newPrismaClient.contact.delete({ where: { id: contactId } });
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      const dataValue = data[key];
+      const existingValue = existingContact[key as keyof typeof existingContact];
+
+      if (dataValue !== "" && dataValue !== null && dataValue !== undefined) {
+        if (key === "createdAt" && typeof dataValue === "string") {
+          contactUpdate[key] = new Date(dataValue);
+        } else {
+          contactUpdate[key] = dataValue;
+        }
+      } else if (existingValue !== null && existingValue !== undefined) {
+        contactUpdate[key] = existingValue;
+      }
+    }
+  }
+
+  const contactUpdated = await newPrismaClient.contact.update({
+    where: { id: contactId },
+    data: contactUpdate,
+  });
+
+  return contactUpdated;
 };
