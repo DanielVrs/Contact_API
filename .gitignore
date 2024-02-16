@@ -2,3 +2,5 @@ node_modules
 *lock*
 .env
 .vscode
+dist
+build.sh

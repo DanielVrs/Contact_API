@@ -10,6 +10,12 @@ API simples para criação de usuários e contatos
 npm install
 ```
 
+<p>Instalar as migrações </p>
+
+```shell
+npx prisma migrate dev
+```
+
 <p>Rodar a aplicação </p>
 
 ```shell

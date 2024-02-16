@@ -4,6 +4,8 @@
   "description": "API simples para criação de usuarios e contatos",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --cls --rs --ignore-watch node_modules src/app.ts"
   },
